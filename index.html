@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>国内中继地图 - BI6LAL整理，数据来自公众号ZJPLCX</title>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=d55ca0e5056bc1ea0230557cb9ef99fa"></script>
+    <script src="js/jquery.min.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div id="container"> </div>
+    <div id="warning">提示：标注点并非真实地址仅用于说明该地区有中继。</div>
+    <script src="js/map.js"></script>
+    <script>
+      document.body.addEventListener('touchmove', function (e) {
+          e.preventDefault(); //阻止默认的处理方式(阻止下拉页面)
+      }, {passive: false}); //passive 参数不能省略，用来兼容ios和android
+    </script>
+  </body>
+</html>

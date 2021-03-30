@@ -1,0 +1,202 @@
+html,
+body {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+#container {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+}
+#container:before,
+#container:after {
+  content: '';
+  display: block;
+  position: absolute;
+  background-color: rgb(204, 0, 0);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+}
+#container:before {
+  width: 100px;
+  height: 1px;
+  margin-left: -50px;
+}
+#container:after {
+  width: 1px;
+  height: 50px;
+  margin-top: -25px;
+}
+#warning {
+  position: absolute;
+  z-index: 160;
+  right: 5px;
+  bottom: 5px;
+  color: #C00;
+  font-size:12px;
+  background: rgba(204, 0, 0, .8);
+  color: #FFF;
+  border-radius: 3px;
+  padding: 3px 10px;
+}
+body.add {
+  background-color: #f0f0f0;
+}
+body.add form {
+  width: 500px;
+  background-color: #fff;
+  padding: 10px 30px;
+  border: 1px solid #CCC;
+  border-radius: 5px;
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  margin-left: -280px;
+}
+body.add form h1 {
+  text-align: center;
+  font-size: 18px;
+  margin: 10px 0;
+  padding: 5px;
+  font-weight: normal;
+  background-color: #f0f0f0;
+}
+body.add form label,
+body.add form .label {
+  display: block;
+  padding: 5px 0;
+}
+body.add form strong {
+  font-weight: normal;
+  display: inline-block;
+  width: 5.5em;
+  text-align: right;
+}
+body.add form strong:after {
+  content: '：';
+}
+body.add form input {
+  height: 20px;
+  line-height: 20px;
+  outline: none;
+  box-sizing: content-box;
+  text-align: center;
+}
+body.add form select {
+  height: 20px;
+  width: 100px;
+  outline: none;
+  box-sizing: content-box;
+}
+body.add form .control {
+  text-align: center;
+  margin: 10px auto;
+}
+body.add form button {
+  outline: none;
+  display: inline-block;
+  margin: 0 10px;
+  width: 120px;
+  height: 40px;
+  line-height: 40px;
+  border: none;
+  background-color: #666;
+  color: #FFF;
+  border-radius: 3px;
+  cursor: pointer;
+}
+body.add form button[type="submit"] {
+  background-color: #C00;
+}
+body.add form #distpicker select {
+  width: 120px;
+}
+body.add form .unit {
+  color: #CCC;
+}
+body.add form .freq-t {
+  color: #CCC;
+}
+body.add form .freq-t:before {
+  content: '，上行频率：';
+  color: #CCC
+}
+#tooltip {
+  position: absolute;
+  z-index: 10000;
+  white-space: nowrap;
+  background: #F5F5F5;
+  text-align: left;
+  padding: 3px;
+  border-radius: 3px;
+  border: solid 1px #CCC;
+  box-shadow: 2px 2px 2px #A2A2A2;
+  font-size: 12px;
+}
+.amap-info-sharp {
+  display: none; // 气泡的小三角指示（不能控制样式，所以藏起来再做一个）
+}
+.amap-info-content {
+  font-size: 12px;
+  padding: 0;
+  overflow: initial;
+  background: none;
+}
+.amap-marker-label {
+  border: none;
+  padding: 0;
+  margin-top: -5px;
+  background: none;
+}
+.amap-info-content .amap-info-close {
+  right: 0 !important;
+  top: 0;
+}
+.point-tip {
+  padding: 5px;
+  background: #fff;
+  color: #000;
+  position: relative;
+  border-radius: 3px;
+  border: solid 1px #fff;
+  white-space: nowrap;
+}
+.point-tip:after {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 50%;
+  margin-left: -6px;
+  width: 0;
+  height: 0;
+  border: solid 6px #fff;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+}
+.point-tip.analog {
+  background: #3d93fd;
+  color: #FFF;
+}
+.point-tip.analog:after {
+  border-top-color: #3d93fd;
+}
+.point-tip.digit {
+  background: #f34234;
+  color: #FFF;
+}
+.point-tip.digit:after {
+  border-top-color: #f34234;
+}
+.point-tip.other {
+  background: #fb7512;
+  color: #FFF;
+}
+.point-tip.other:after {
+  border-top-color: #fb7512;
+}
+
