@@ -33,7 +33,7 @@ map.plugin(["AMap.MapType", "AMap.ToolBar", "AMap.Scale"], function () {
   map.addControl(new AMap.Scale());
 });
 
-var infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -30)});
+var infoWindow = new AMap.InfoWindow({ offset: new AMap.Pixel(0, -30) });
 
 // https://developer.amap.com/api/javascript-api/reference/layer/#AMap.LabelsLayer
 // demo: https://lbs.amap.com/api/javascript-api/example/marker/labelsmarker
@@ -87,90 +87,120 @@ function getRepeater(from = "") {
     south: south,
     north: north,
   };
-  $.get(
-    "https://repeater.ham.upall.cn/api/",
-    params,
-    function (res) {
-      repeaters = res.data || [];
-      // 按坐标分组（同一个坐标上可能有多条记录）
-      repeaters = (function (items = []) {
-        var array = [];
-        // 分组
-        var groupd = {};
-        for (let i = 0; i < items.length; i++) {
-          var v = items[i];
-          var key = v.longitude + "," + v.latitude;
-          if (!groupd[key]) {
-            groupd[key] = [];
-          }
-          groupd[key].push(v);
-        }
-        // 将分组变回数组
-        for (var key in groupd) {
-          if (Object.prototype.hasOwnProperty.call(groupd, key)) {
-            var v = groupd[key];
-            var r = (v.length > 0 && v[0]) || null;
-            if (r) {
-              var configurations = [];
-              for (var i = 0; i < v.length; i++) {
-                var e = v[i];
-                configurations.push(e.name + ": " + e.configuration);
-              }
-              r.total = configurations.length || 1;
-              r.configuration = configurations.join(';\n');
-              var type = "";
-              var isDigit = r.configuration.indexOf("数") != -1;
-              var isAnalog = r.configuration.indexOf("模") != -1;
-              if (isDigit && !isAnalog) {
-                type = "digit";
-              } else if (isAnalog && !isDigit) {
-                type = "analog";
-              } else {
-                type = "other";
-              }
-              r.type = type;
-              array.push(r);
-            }
-          }
-        }
-        return array;
-      })(repeaters);
-      // 在地图上标点
-      for (var p = 0; p < repeaters.length; p++) {
-        var v = repeaters[p];
-        var marker = new AMap.Marker({
-          title: v.configuration,
-          position: [v.longitude, v.latitude],
-          icon: getIcon(v),
-          topWhenClick: true,
-          map: map,
-          offset: new AMap.Pixel(-12, -30),
+  if (db) {
+    var sql = `
+          SELECT
+            r.name,
+            r.configuration,
+            r.via,
+            l.name AS location,
+            l.longitude,
+            l.latitude
+          FROM repeater AS r
+          LEFT JOIN location AS l ON r.location_id = l.id
+          WHERE r.location_id IN (
+            SELECT
+              id
+            FROM location
+            WHERE 1
+              AND longitude >= '${params.west}'
+              AND longitude <= '${params.east}'
+              AND latitude <= '${params.north}'
+              AND latitude >= '${params.south}'
+          )`;
+    var contents = db.exec(sql);
+    repeaters =
+      contents[0].values.map((v) => {
+        var item = {};
+        contents[0].columns.forEach((key, i) => {
+          item[key] = v[i];
         });
-        marker.content = '<div class="point-tip ' + v.type + '"><div class="content"><div>' + v.configuration.replace(/[\r\n]/g, '</div><div>') + '</div></div></div>';
-
-        // 密度：低有label，高无label
-        if (repeaters.length < hidePointLabelWhenCountGreaterThan) {
-          marker.setLabel({
-            content: marker.content,
-            direction: 'top', // 可选值：'top'|'right'|'bottom'|'left'|'center'，默认值：'top' 
-            offset: new AMap.Pixel(-0, -0),
-          });
-        } else {
-          //marker.setLabel({
-          //  content: '<div class="point-tip ' + v.type + '"><div class="content">' + (v.location || v.name) + '</div></div>',
-          //  direction: 'top', // 可选值：'top'|'right'|'bottom'|'left'|'center'，默认值：'top' 
-          //  offset: new AMap.Pixel(-0, -0),
-          //});
-          marker.on('click', function(e){
-            infoWindow.setContent(e.target.content);
-            infoWindow.open(map, e.target.getPosition());
-          });
+        return item;
+      }) || [];
+    // 按坐标分组（同一个坐标上可能有多条记录）
+    repeaters = (function (items = []) {
+      var array = [];
+      // 分组
+      var groupd = {};
+      for (let i = 0; i < items.length; i++) {
+        var v = items[i];
+        var key = v.longitude + "," + v.latitude;
+        if (!groupd[key]) {
+          groupd[key] = [];
         }
-        labels.push(marker);
+        groupd[key].push(v);
       }
-    },
-    "json"
-  );
+      // 将分组变回数组
+      for (var key in groupd) {
+        if (Object.prototype.hasOwnProperty.call(groupd, key)) {
+          var v = groupd[key];
+          var r = (v.length > 0 && v[0]) || null;
+          if (r) {
+            var configurations = [];
+            for (var i = 0; i < v.length; i++) {
+              var e = v[i];
+              configurations.push(e.name + ": " + e.configuration);
+            }
+            r.total = configurations.length || 1;
+            r.configuration = configurations.join(";\n");
+            var type = "";
+            var isDigit = r.configuration.indexOf("数") != -1;
+            var isAnalog = r.configuration.indexOf("模") != -1;
+            if (isDigit && !isAnalog) {
+              type = "digit";
+            } else if (isAnalog && !isDigit) {
+              type = "analog";
+            } else {
+              type = "other";
+            }
+            r.type = type;
+            array.push(r);
+          }
+        }
+      }
+      return array;
+    })(repeaters);
+    // 在地图上标点
+    for (var p = 0; p < repeaters.length; p++) {
+      var v = repeaters[p];
+      var marker = new AMap.Marker({
+        title: v.configuration,
+        position: [v.longitude, v.latitude],
+        icon: getIcon(v),
+        topWhenClick: true,
+        map: map,
+        offset: new AMap.Pixel(-12, -30),
+      });
+      marker.content =
+        '<div class="point-tip ' +
+        v.type +
+        '"><div class="content"><div>' +
+        v.configuration.replace(/[\r\n]/g, "</div><div>") +
+        "</div></div></div>";
+
+      // 密度：低有label，高无label
+      if (repeaters.length < hidePointLabelWhenCountGreaterThan) {
+        marker.setLabel({
+          content: marker.content,
+          direction: "top", // 可选值：'top'|'right'|'bottom'|'left'|'center'，默认值：'top'
+          offset: new AMap.Pixel(-0, -0),
+        });
+      } else {
+        //marker.setLabel({
+        //  content: '<div class="point-tip ' + v.type + '"><div class="content">' + (v.location || v.name) + '</div></div>',
+        //  direction: 'top', // 可选值：'top'|'right'|'bottom'|'left'|'center'，默认值：'top'
+        //  offset: new AMap.Pixel(-0, -0),
+        //});
+        marker.on("click", function (e) {
+          infoWindow.setContent(e.target.content);
+          infoWindow.open(map, e.target.getPosition());
+        });
+      }
+      labels.push(marker);
+    }
+  } else {
+    console.warn("db not ready.");
+  }
 }
 function getIcon(repeater) {
   var total = repeater.total || 1;
@@ -178,15 +208,15 @@ function getIcon(repeater) {
   var offset = {
     x: 0,
     y: 0,
-  }
+  };
   switch (repeater.type) {
-    case 'digit':
+    case "digit":
       offset = {
         x: -8,
         y: -135,
       };
       break;
-    case 'analog':
+    case "analog":
       offset = {
         x: -8,
         y: -47,
@@ -198,10 +228,10 @@ function getIcon(repeater) {
         y: -223,
       };
   }
-  offset.x = offset.x - 44 * ( total - 1 );
+  offset.x = offset.x - 44 * (total - 1);
   var icon = new AMap.Icon({
     size: new AMap.Size(25, 34),
-    image: '//a.amap.com/jsapi_demos/static/images/poi-marker.png',
+    image: "//a.amap.com/jsapi_demos/static/images/poi-marker.png",
     imageSize: new AMap.Size(437, 262),
     imageOffset: new AMap.Pixel(offset.x, offset.y),
   });
