@@ -200,3 +200,16 @@ body.add form .freq-t:before {
   border-top-color: #fb7512;
 }
 
+.plugins {
+  position: absolute;
+  left: 5px;
+  top: 5px;
+}
+.plugins a {
+  display: block;
+  font-size: 12px;
+  padding: 3px 5px;
+  background: rgba(255,255,255,.8);
+  border: solid 1px #CCC;
+  border-radius: 3px;
+}
