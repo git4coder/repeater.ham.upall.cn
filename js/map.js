@@ -22,14 +22,14 @@ var map = new AMap.Map("container", {
 var ruler = new AMap.RangingTool(map);
 
 // 地图上的工具
-map.plugin(["AMap.MapType", "AMap.ToolBar", "AMap.Scale"], function () {
+map.plugin(["AMap.MapType", "AMap.ToolBar", "AMap.Scale", "AMap.ControlBar"], function () {
   map.addControl(new AMap.MapType({
     defaultType: 0, // 初始化默认图层类型。 0默认底图，1卫星图，默认值：0
     showTraffic: false, // 叠加实时交通图层 默认值：false
     showRoad: false, // 叠加路网图层 默认值：false
   }));
   map.addControl(new AMap.Scale()); // 比例尺
-  map.addControl(new AMap.ControlBar({ //添加控件
+  map.addControl(new AMap.ControlBar({ // 添加 3D 控件
     showZoomBar:true, // 显示zoom条控件,false表示不显示
     showControlButton:true, // 默认false,false表示取消,旋转按钮将变成南北指南针
     position:{ // 控件的定位
