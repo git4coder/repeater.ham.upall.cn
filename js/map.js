@@ -29,6 +29,14 @@ map.plugin(["AMap.MapType", "AMap.ToolBar", "AMap.Scale"], function () {
     showRoad: false, // 叠加路网图层 默认值：false
   }));
   map.addControl(new AMap.Scale()); // 比例尺
+  map.addControl(new AMap.ControlBar({ //添加控件
+    showZoomBar:true, // 显示zoom条控件,false表示不显示
+    showControlButton:true, // 默认false,false表示取消,旋转按钮将变成南北指南针
+    position:{ // 控件的定位
+      right:'10px',
+      top:'120px'
+    }
+  }));
   /*
   map.addControl(
     new AMap.ToolBar({
