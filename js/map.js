@@ -9,8 +9,7 @@ var currentCenter = {
 };
 // mapOptions: https://developer.amap.com/api/javascript-api/reference/map
 var map = new AMap.Map("container", {
-  mapStyle: 'normal',
-  // mapStyle: "amap://styles/58f06ea8b31a8391156e2c4c6b4143e0", // normal dark
+  mapStyle: "amap://styles/58f06ea8b31a8391156e2c4c6b4143e0", // normal dark
   viewMode: "3D",
   resizeEnable: true,
   pitch: 50,
