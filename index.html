@@ -7,7 +7,7 @@
     <title>国内中继地图 - BI6LAL整理，数据来自公众号ZJPLCX</title>
     <script
       type="text/javascript"
-      src="https://webapi.amap.com/maps?v=1.4.15&key=d55ca0e5056bc1ea0230557cb9ef99fa"
+      src="https://webapi.amap.com/maps?v=1.4.15&key=d55ca0e5056bc1ea0230557cb9ef99fa&plugin=AMap.RangingTool"
     ></script>
     <script src="js/jquery.min.js"></script>
     <link rel="stylesheet" href="css/style.css" />
@@ -26,8 +26,9 @@
   </head>
   <body>
     <div id="container"></div>
+    <div class="plugins"></div>
     <div id="warning">
-      提示：标注点并非真实地址仅用于说明该地区有中继。
+      提示：标注点并非中继的真实地址。
       <a href="https://github.com/git4coder/repeater.ham.upall.cn">Github</a>                                                                       
     </div>
     <script src="js/map.js"></script>
