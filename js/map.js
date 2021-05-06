@@ -23,7 +23,13 @@ var ruler = new AMap.RangingTool(map);
 
 // 地图上的工具
 map.plugin(["AMap.MapType", "AMap.ToolBar", "AMap.Scale"], function () {
-  map.addControl(new AMap.MapType({}));
+  map.addControl(new AMap.MapType({
+    defaultType: 0, // 初始化默认图层类型。 0默认底图，1卫星图，默认值：0
+    showTraffic: false, // 叠加实时交通图层 默认值：false
+    showRoad: false, // 叠加路网图层 默认值：false
+  }));
+  map.addControl(new AMap.Scale()); // 比例尺
+  /*
   map.addControl(
     new AMap.ToolBar({
       ruler: false,
@@ -32,7 +38,7 @@ map.plugin(["AMap.MapType", "AMap.ToolBar", "AMap.Scale"], function () {
       autoPosition: false,
     })
   );
-  map.addControl(new AMap.Scale());
+  */
 });
 
 var infoWindow = new AMap.InfoWindow({ offset: new AMap.Pixel(0, -30) });
