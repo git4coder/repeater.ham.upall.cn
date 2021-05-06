@@ -18,6 +18,8 @@ var map = new AMap.Map("container", {
   zoom: currentZoom, // 国5 省7 市11 街17
   // >=3显示省级，>=6显示各市, >=8显示县
 });
+// 测距尺
+var ruler = new AMap.RangingTool(map);
 
 // 地图上的工具
 map.plugin(["AMap.MapType", "AMap.ToolBar", "AMap.Scale"], function () {
@@ -259,4 +261,9 @@ map.on("zoomend", function () {
 // 获取数据
 map.on("complete", function () {
   getRepeater("onComplete");
+  $(function(){
+    if (!$('.plugins .ruler').size()) {
+      $('.plugins').append('<a class="ruler" href="javascript:;" onclick="ruler.turnOn()">测距</a>');
+    }
+  })
 });
