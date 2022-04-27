@@ -11,4 +11,6 @@
 
 ![preview](screenshot.png)
 
+[在线预览/演示地址](https://repeater.ham.upall.cn/)
+
 DE BI6LAL VY 73
