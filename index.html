@@ -21,7 +21,7 @@
       Promise.all([sqlPromise, dataPromise]).then((data) => {
         const [SQL, buf] = data;
         db = new SQL.Database(new Uint8Array(buf));
-        $('#loading').text('数据库已加载').hide(3000);
+        $('#loading').text('数据库已加载').css('background', '#35b500').delay(2000).fadeOut();
       });
     </script>
   </head>
