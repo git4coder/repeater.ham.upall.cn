@@ -281,3 +281,10 @@ map.on("complete", function () {
     }
   })
 });
+
+var dbLoadedHandle = setInterval(function(){
+   if (db) {
+     getRepeater("onComplete");
+     clearInterval(dbLoadedHandle);
+   }
+}, 200);
