@@ -21,6 +21,7 @@
       Promise.all([sqlPromise, dataPromise]).then((data) => {
         const [SQL, buf] = data;
         db = new SQL.Database(new Uint8Array(buf));
+        $('#loading').text('数据库已加载').hide(3000);
       });
     </script>
   </head>
@@ -31,6 +32,7 @@
       提示：标注点并非中继的真实地址。
       <a href="https://github.com/git4coder/repeater.ham.upall.cn">Github</a>                                                                       
     </div>
+    <div id="loading">数据库加载中…</div>
     <script src="js/map.js"></script>
     <script>
       document.body.addEventListener(
