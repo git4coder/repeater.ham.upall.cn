@@ -17,7 +17,32 @@
       const sqlPromise = initSqlJs({
         locateFile: (file) => `./js/${file}`,
       });
-      const dataPromise = fetch("./ham_rpt.sqlite").then((res) => res.arrayBuffer());
+      const dataPromise = fetch("./ham_rpt.sqlite")
+        .then((res) => {
+          // https://developer.mozilla.org/en-US/docs/Web/API/Response/body
+          const body = res.body;
+          const reader = body.getReader();
+          var bytesReceived = 0;
+          var contentLength = +res.headers.get("Content-Length");
+          return new ReadableStream({
+            start(controller) {
+              return pump();
+              function pump() {
+                return reader.read().then(({ done, value }) => {
+                  if (done) {
+                    controller.close();
+                    return;
+                  }
+                  bytesReceived += value.length;
+                  $("#loading span").text(Math.floor(bytesReceived / contentLength * 100) + '%');
+                  controller.enqueue(value);
+                  return pump();
+                });
+              }
+            },
+          });
+        })
+        .then((res) => res.arrayBuffer());
       Promise.all([sqlPromise, dataPromise]).then((data) => {
         const [SQL, buf] = data;
         db = new SQL.Database(new Uint8Array(buf));
@@ -32,7 +57,7 @@
       提示：标注点并非中继的真实地址。
       <a href="https://github.com/git4coder/repeater.ham.upall.cn">Github</a>                                                                       
     </div>
-    <div id="loading">数据库加载中…</div>
+    <div id="loading">数据库加载中…<span>0%</span></div>
     <script src="js/map.js"></script>
     <script>
       document.body.addEventListener(
