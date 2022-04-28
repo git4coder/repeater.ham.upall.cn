@@ -42,6 +42,7 @@
             },
           });
         })
+        .then((stream) => new Response(stream))
         .then((res) => res.arrayBuffer());
       Promise.all([sqlPromise, dataPromise]).then((data) => {
         const [SQL, buf] = data;
